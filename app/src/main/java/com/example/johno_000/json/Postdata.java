@@ -25,9 +25,9 @@ import java.io.InputStreamReader;
 
 
 public class Postdata extends ActionBarActivity {
-    protected EditText etName, etCountry, etTwitter;
+    protected EditText bsemail, bscompanyName, bsname, bslastnameP, bslastnameM, bsloginname, bscif, bspassword ;
     protected Button btnPost;
-    private String name, country, twitter;
+    private String email, companyName, name, lastnameP, lastnameM, loginname, cif, password;
     Person person;
 
     @Override
@@ -35,9 +35,16 @@ public class Postdata extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postdata);
 
-        etName = (EditText) findViewById(R.id.name);
-        etCountry = (EditText) findViewById(R.id.country);
-        etTwitter = (EditText) findViewById(R.id.twitter);
+        bsemail = (EditText) findViewById(R.id.email);
+        bscompanyName = (EditText) findViewById(R.id.companyName);
+        bsname = (EditText) findViewById(R.id.name);
+        bslastnameP = (EditText) findViewById(R.id.lastnameP);
+        bslastnameM = (EditText) findViewById(R.id.lastnameM);
+        bsloginname = (EditText) findViewById(R.id.loginname);
+        bscif = (EditText) findViewById(R.id.cif);
+        bspassword = (EditText) findViewById(R.id.password);
+
+
 
         btnPost = (Button) findViewById(R.id.btnPost);
 
@@ -45,10 +52,15 @@ public class Postdata extends ActionBarActivity {
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        name = etName.getText().toString();
-                        country = etCountry.getText().toString();
-                        twitter = etTwitter.getText().toString();
-                        new HttpAsyncTask().execute("http://hmkcode.appspot.com/jsonservlet");
+                        email = bsemail.getText().toString();
+                        companyName = bscompanyName.getText().toString();
+                        name = bsname.getText().toString();
+                        lastnameP = bslastnameP.getText().toString();
+                        lastnameM = bslastnameM.getText().toString();
+                        loginname = bsloginname.getText().toString();
+                        cif= bscif.getText().toString();
+                        password = bspassword.getText().toString();
+                        new HttpAsyncTask().execute("http://216.250.125.239:17956/auth/register");
                     }
                 }
         );
@@ -87,23 +99,35 @@ public class Postdata extends ActionBarActivity {
             String json= "";
 
             JSONObject jsonObject = new JSONObject();
+            jsonObject.accumulate("email", person.getEmail());
+            jsonObject.accumulate("companyName",person.getCompanyName());
             jsonObject.accumulate("name", person.getName());
-            jsonObject.accumulate("country", person.getCountry());
-            jsonObject.accumulate("twitter", person.getTwitter());
+            jsonObject.accumulate("lastnameP", person.getLastnameP());
+            jsonObject.accumulate("lastnameM", person.getLastnameM());
+            jsonObject.accumulate("loginname", person.getLoginname());
+            jsonObject.accumulate("cif", person.getCif());
+            jsonObject.accumulate("password",person.getPassword());
 
             json = jsonObject.toString();
 
             StringEntity se = new StringEntity(json);
             httpPost.setEntity(se);
-            httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content-type", "application/json");
+           // httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json;charset=UTF-8");
 
             HttpResponse httpResponse = httpClient.execute(httpPost);
 
             inputStream = httpResponse.getEntity().getContent();
 
+
+
+
+
+            Log.d("respuesta", String.valueOf(inputStream));
+
             if (inputStream != null){
                 result = convertInputStreamToString(inputStream);
+                Log.d("RESPUETSA::::::::::.", result);
             }
             else {
                 result = "Posting Failed!";
@@ -121,9 +145,14 @@ public class Postdata extends ActionBarActivity {
         @Override
         protected String doInBackground(String... params) {
             person = new Person();
+            person.setEmail(email);
+            person.setCompanyName(companyName);
             person.setName(name);
-            person.setCountry(country);
-            person.setTwitter(twitter);
+            person.setLastnameP(lastnameP);
+            person.setLastnameM(lastnameM);
+            person.setLoginname(loginname);
+            person.setCif(cif);
+            person.setPassword(password);
             return POST(params[0],person);
         }
 
