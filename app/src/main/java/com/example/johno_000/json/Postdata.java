@@ -123,14 +123,14 @@ public class Postdata extends ActionBarActivity {
 
 
 
-            Log.d("respuesta", String.valueOf(inputStream));
+            Log.d("Respuesta out string", String.valueOf(inputStream));
 
             if (inputStream != null){
                 result = convertInputStreamToString(inputStream);
-                Log.d("RESPUETSA::::::::::.", result);
+                Log.d("RESPUESTA::::::::::.", result);
             }
             else {
-                result = "Posting Failed!";
+                result = "Post falló :( ";
             }
 
         }
@@ -158,7 +158,7 @@ public class Postdata extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            Toast.makeText(getBaseContext(), "Data Sent!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Datos enviados", Toast.LENGTH_SHORT).show();
         }
     }
 
